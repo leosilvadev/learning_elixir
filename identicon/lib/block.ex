@@ -1,5 +1,5 @@
-defmodule Block do
+defmodule Identicon.Block do
 
-  defstruct rgb: nil, index: nil, from_horizontal: nil, from_vertical: nil
+  defstruct rgb: nil, from: nil, to: nil
 
 end

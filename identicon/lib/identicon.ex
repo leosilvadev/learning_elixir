@@ -13,18 +13,18 @@ defmodule Identicon do
     File.write("#{input}.png", image)
   end
 
-  def draw_image(%Image{blocks: blocks}) do
+  def draw_image(%Identicon.Image{blocks: blocks}) do
     image = :egd.create(250, 250)
 
-    Enum.each blocks, fn(%Block{from_horizontal: from_horizontal, from_vertical: from_vertical, rgb: rgb}) ->
+    Enum.each blocks, fn(%Identicon.Block{from: from, to: to, rgb: rgb}) ->
       background = :egd.color(rgb)
-      :egd.filledRectangle(image, {from_horizontal, from_vertical}, {from_horizontal + 50, from_vertical + 50}, background)
+      :egd.filledRectangle(image, from, to, background)
     end
 
     :egd.render(image)
   end
 
-  def build_blocks(%Image{hex: hex, rgb: rgb} = image) do
+  def build_blocks(%Identicon.Image{hex: hex, rgb: rgb} = image) do
     blocks =
       hex
       |> Enum.chunk_every(3, 3, :discard)
@@ -33,20 +33,21 @@ defmodule Identicon do
       |> Enum.with_index
       |> Enum.map(&build_block(&1, rgb))
 
-    %Image{ image | blocks: blocks}
+    %Identicon.Image{ image | blocks: blocks}
   end
 
   def build_block({value, index}, rgb) do
-    %Block{
+    horizontal = rem(index, 5) * 50
+    vertical = div(index, 5) * 50
+    %Identicon.Block{
       rgb: get_rgb_color(value, rgb),
-      index: index,
-      from_horizontal: rem(index, 5) * 50,
-      from_vertical: div(index, 5) * 50
+      from: {horizontal, vertical},
+      to: {horizontal + 50, vertical + 50}
     }
   end
 
   def get_rgb_color(number, rgb) do
-    if rem(number, 2) == 0, do: rgb, else: {255, 255, 255}
+    if rem(number, 2) == 0, do: rgb, else: {225, 225, 225}
   end
 
   def mirror_row([first, second | _third] = row) do
@@ -58,10 +59,10 @@ defmodule Identicon do
     |> :crypto.hash(input)
     |> :binary.bin_to_list
 
-    %Image{hex: hex}
+    %Identicon.Image{hex: hex}
   end
 
-  def pick_color(%Image{hex: [r, g, b | _tail]} = image) do
+  def pick_color(%Identicon.Image{hex: [r, g, b | _tail]} = image) do
     %{image | rgb: {r, g, b}}
   end
 
