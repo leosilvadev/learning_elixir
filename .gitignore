@@ -2,3 +2,4 @@ _build/
 deps/
 doc/
 *.png
+_build/
