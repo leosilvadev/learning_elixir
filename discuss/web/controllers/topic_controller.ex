@@ -6,7 +6,13 @@ defmodule Discuss.TopicController do
   plug Discuss.Plugs.RequireAuth when action in [:new, :edit, :create, :update, :delete]
 
   def index(conn, _params) do
-    render conn, "index.html", topics: Repo.all(Topic)
+    case conn do
+      %{assigns: %{user: %{id: id}}} ->
+        render conn, "index.html", topics: Repo.all(Topic), logged_user: %{id: id}
+
+      _ ->
+        render conn, "index.html", topics: Repo.all(Topic), logged_user: %{}
+    end
   end
 
   def new(conn, _params) do

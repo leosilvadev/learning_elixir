@@ -1,17 +1,20 @@
 <h5>Topics</h5>
 
 <ul class="collection">
-  <%= for %Discuss.Topic{title: title} = topic <- @topics do %>
+  <%= for %Discuss.Topic{title: title, user_id: user_id} = topic <- @topics do %>
     <li class="collection-item">
       <div class="row">
         <div class="col s10"><%= title %></div>
         <div class="col s2">
-          <%= link to: topic_path(@conn, :edit, topic), class: "btn" do %>
-            <i class="material-icons">edit</i>
-          <% end %>
 
-          <%= link to: topic_path(@conn, :delete, topic), method: :delete, class: "btn" do %>
-            <i class="material-icons">delete</i>
+          <%= if @logged_user[:id] == user_id do %>
+            <%= link to: topic_path(@conn, :edit, topic), class: "btn" do %>
+              <i class="material-icons">edit</i>
+            <% end %>
+
+            <%= link to: topic_path(@conn, :delete, topic), method: :delete, class: "btn" do %>
+              <i class="material-icons">delete</i>
+            <% end %>
           <% end %>
         </div>
       </div>
