@@ -17,6 +17,11 @@ defmodule Discuss.TopicController do
     end
   end
 
+  def show(conn, %{"id" => topic_id} = params) do
+    topic = Repo.get!(Topic, topic_id)
+    render conn, "show.html", topic: topic
+  end
+
   def new(conn, _params) do
     changeset = Topic.changeset(%Topic{})
     render conn, "new.html", changeset: changeset
