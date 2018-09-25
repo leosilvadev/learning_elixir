@@ -4,7 +4,10 @@ defmodule Discuss.CommentsChannel do
   alias Discuss.{Comment, Topic}
 
   def join("comments:" <> id, _params, socket) do
-    {:ok, %{}, assign(socket, :topic, Repo.get(Topic, String.to_integer(id)))}
+    %Topic{comments: comments} = topic = Topic
+    |> Repo.get(String.to_integer(id))
+    |> Repo.preload(:comments)
+    {:ok, %{comments: comments}, assign(socket, :topic, topic)}
   end
 
   def handle_in("comments:add", %{"content" => content}, %{assigns: %{topic: topic}} = socket) do
