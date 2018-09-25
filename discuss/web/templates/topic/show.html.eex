@@ -10,18 +10,29 @@
 </div>
 
 <script>
+  const buildCommentHTML = comment => `<li class="collection-item">${comment.content}</li>`;
+
+  const renderComment = (comment) => {
+      const html = buildCommentHTML(comment);
+      document.querySelector('.collection').innerHTML += html;
+  };
+
   const renderComments = (comments) => {
     const elements = comments.map(comment => `<li class="collection-item">${comment.content}</li>`);
-    document.querySelector('.collection').innerHTML = elements.join('');
+    document.querySelector('.collection').innerHTML += elements.join('');
   };
 
   document.addEventListener("DOMContentLoaded", () => {
     const topicId = <%= @topic.id %>;
     const socket = window.createSocket(topicId, renderComments);
+    const textarea = document.querySelector("textarea");
+
+    socket.channel.on(`comments:${topicId}:new`, res => renderComment(res.comment));
 
     document.querySelector("button").addEventListener("click", () => {
-      const text = document.querySelector("textarea").value;
+      const text = textarea.value;
       socket.addComment(text);
+      textarea.value = "";
     });
   });
 </script>

@@ -17,6 +17,7 @@ const createSocket = (topicId, renderComments) => {
     .receive("error", resp => { console.log("Unable to join", resp) });
 
   return {
+    channel,
     addComment: addComment(channel)
   };
 };
