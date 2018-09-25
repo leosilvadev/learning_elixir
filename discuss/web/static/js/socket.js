@@ -4,13 +4,21 @@ let socket = new Socket("/socket", {params: {token: window.userToken}})
 
 socket.connect()
 
-const createSocket = () => {
-  const channel = socket.channel(`comments:${topicId}`, {})
+const addComment = (channel) => {
+  return (content) => {
+    channel.push("comments:add", {content});
+  };
+};
+
+const createSocket = (topicId) => {
+  const channel = socket.channel(`comments:${topicId}`, {});
   channel.join()
     .receive("ok", resp => { console.log("Joined successfully", resp) })
-    .receive("error", resp => { console.log("Unable to join", resp) })
-  return channel
-}
+    .receive("error", resp => { console.log("Unable to join", resp) });
 
+  return {
+    addComment: addComment(channel)
+  }
+};
 
 window.createSocket = createSocket;

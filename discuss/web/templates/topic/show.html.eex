@@ -1,8 +1,18 @@
 <h4><%= @topic.title %></h4>
 
+<div class="input-field">
+  <textarea class="materialize-textarea"></textarea>
+  <button class="btn">Add Comment</button>
+</div>
+
 <script>
   document.addEventListener("DOMContentLoaded", function() {
-    const socket = window.createSocket(<%= @topic.id %>);
-    
+    const topicId = <%= @topic.id %>;
+    const socket = window.createSocket(topicId);
+
+    document.querySelector("button").addEventListener("click", function() {
+      const text = document.querySelector("textarea").value;
+      socket.addComment(text);
+    })
   });
 </script>
