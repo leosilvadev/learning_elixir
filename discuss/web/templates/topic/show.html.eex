@@ -1,1 +1,8 @@
 <h4><%= @topic.title %></h4>
+
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const socket = window.createSocket(<%= @topic.id %>);
+    
+  });
+</script>
