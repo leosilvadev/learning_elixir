@@ -3,16 +3,25 @@
 <div class="input-field">
   <textarea class="materialize-textarea"></textarea>
   <button class="btn">Add Comment</button>
+
+  <div class="container-comments">
+    <ul class="collection"></ul>
+  </div>
 </div>
 
 <script>
-  document.addEventListener("DOMContentLoaded", function() {
-    const topicId = <%= @topic.id %>;
-    const socket = window.createSocket(topicId);
+  const renderComments = (comments) => {
+    const elements = comments.map(comment => `<li class="collection-item">${comment.content}</li>`);
+    document.querySelector('.collection').innerHTML = elements.join('');
+  };
 
-    document.querySelector("button").addEventListener("click", function() {
+  document.addEventListener("DOMContentLoaded", () => {
+    const topicId = <%= @topic.id %>;
+    const socket = window.createSocket(topicId, renderComments);
+
+    document.querySelector("button").addEventListener("click", () => {
       const text = document.querySelector("textarea").value;
       socket.addComment(text);
-    })
+    });
   });
 </script>

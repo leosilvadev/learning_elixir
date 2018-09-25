@@ -10,15 +10,15 @@ const addComment = (channel) => {
   };
 };
 
-const createSocket = (topicId) => {
+const createSocket = (topicId, renderComments) => {
   const channel = socket.channel(`comments:${topicId}`, {});
   channel.join()
-    .receive("ok", resp => { console.log("Joined successfully", resp) })
+    .receive("ok", resp => renderComments(resp.comments))
     .receive("error", resp => { console.log("Unable to join", resp) });
 
   return {
     addComment: addComment(channel)
-  }
+  };
 };
 
 window.createSocket = createSocket;
