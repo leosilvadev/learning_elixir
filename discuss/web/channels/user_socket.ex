@@ -11,11 +11,8 @@ defmodule Discuss.UserSocket do
   # transport :longpoll, Phoenix.Transports.LongPoll
 
   def connect(%{"token" => token}, socket) do
-    case Phoenix.Token.verify(Discuss.Endpoint, "key", token) do
-      {:ok, user_id} ->
-        {:ok, assign(socket, :user_id, user_id)}
-      _ ->
-        {:error, %{message: "Permission denied"}, socket}
+    with {:ok, user_id} <- Phoenix.Token.verify(Discuss.Endpoint, "key", token) do
+      {:ok, assign(socket, :user_id, user_id)}
     end
   end
 
