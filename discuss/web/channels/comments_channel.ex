@@ -10,9 +10,9 @@ defmodule Discuss.CommentsChannel do
     {:ok, %{comments: comments}, assign(socket, :topic, topic)}
   end
 
-  def handle_in("comments:add", %{"content" => content}, %{assigns: %{topic: topic}} = socket) do
+  def handle_in("comments:add", %{"content" => content}, %{assigns: %{topic: topic, user_id: user_id}} = socket) do
     changeset = topic
-      |> build_assoc(:comments)
+      |> build_assoc(:comments, user_id: user_id)
       |> Comment.changeset(%{content: content})
 
     case Repo.insert(changeset) do

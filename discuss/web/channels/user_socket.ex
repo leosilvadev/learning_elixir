@@ -1,14 +1,22 @@
 defmodule Discuss.UserSocket do
   use Phoenix.Socket
 
+  alias Discuss.Repo
+  alias Discuss.User
+
   ## Channels
   channel "comments:*", Discuss.CommentsChannel
 
   transport :websocket, Phoenix.Transports.WebSocket
   # transport :longpoll, Phoenix.Transports.LongPoll
 
-  def connect(${"token" => token}, socket) do
-    {:ok, socket}
+  def connect(%{"token" => token}, socket) do
+    case Phoenix.Token.verify(Discuss.Endpoint, "key", token) do
+      {:ok, user_id} ->
+        {:ok, assign(socket, :user_id, user_id)}
+      _ ->
+        {:error, %{message: "Permission denied"}, socket}
+    end
   end
 
   # Socket id's are topics that allow you to identify all sockets for a given user:
