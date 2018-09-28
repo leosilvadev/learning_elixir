@@ -18,4 +18,10 @@ defmodule Todo.List do
       entries: Map.put(entries, auto_id, entry)
     }
   end
+
+  def entries(%List{entries: entries}, %Date{} = date) do
+    entries
+    |> Stream.filter(fn {_, %Item{date: entry_date}} -> entry_date == date end)
+    |> Enum.map(fn {_, entry} -> entry end)
+  end
 end

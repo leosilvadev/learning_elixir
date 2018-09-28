@@ -2,7 +2,7 @@ defmodule Todo.Item do
 
   defstruct [
     id: nil,
-    datetime: nil,
+    date: nil,
     title: nil,
     description: nil
   ]
