@@ -24,4 +24,15 @@ defmodule Todo.List do
     |> Stream.filter(fn {_, %Item{date: entry_date}} -> entry_date == date end)
     |> Enum.map(fn {_, entry} -> entry end)
   end
+
+  def update_entry(%List{entries: entries} = todo_list, id, updater) do
+    case Map.fetch(entries, id) do
+      :error -> todo_list
+      {:ok, entry} ->
+        %List{
+          todo_list |
+          entries: Map.put(entries, id, updater.(entry))
+        }
+    end
+  end
 end
