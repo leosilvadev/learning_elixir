@@ -29,9 +29,10 @@ defmodule Todo.List do
     case Map.fetch(entries, id) do
       :error -> todo_list
       {:ok, entry} ->
+        new_entry = %Item{id: ^id} = updater.(entry)
         %List{
           todo_list |
-          entries: Map.put(entries, id, updater.(entry))
+          entries: Map.put(entries, id, new_entry)
         }
     end
   end
