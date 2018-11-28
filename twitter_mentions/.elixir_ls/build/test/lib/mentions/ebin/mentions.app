@@ -1,0 +1,10 @@
+{application,mentions,
+             [{applications,[kernel,stdlib,elixir,logger,poison,cowboy,plug,
+                             plug_cowboy]},
+              {description,"mentions"},
+              {modules,['Elixir.Mentions.Application',
+                        'Elixir.Mentions.Controller',
+                        'Elixir.Mentions.Endpoint']},
+              {registered,[]},
+              {vsn,"0.1.0"},
+              {mod,{'Elixir.Mentions.Application',[]}}]}.
