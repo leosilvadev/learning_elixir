@@ -23,3 +23,4 @@ erl_crash.dump
 mentions-*.tar
 
 .elixir_ls/
+deps/
