@@ -1,11 +1,16 @@
 defmodule Mentions.Application do
   use Application
+  use Supervisor
 
   def start(_type, _args),
     do: Supervisor.start_link(children(), opts())
 
   defp children do
-    [Mentions.Endpoint]
+    [
+      supervisor(Mentions.Endpoint, []),
+      supervisor(Mentions.Repo, []),
+      worker(Mentions.Worker, [Application.get_env(:mentions, :username)], restart: :transient)
+    ]
   end
 
   defp opts do

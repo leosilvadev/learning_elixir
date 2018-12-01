@@ -11,7 +11,7 @@ defmodule Mentions.Endpoint do
 
   plug(:dispatch)
 
-  forward("/api/v1/mentions", to: Mentions.Controller)
+  forward("/api/status", to: Mentions.Controller)
 
   match _ do
     send_resp(conn, 404, Poison.encode!(%{message: "Not Found"}))
@@ -24,7 +24,7 @@ defmodule Mentions.Endpoint do
     }
   end
 
-  def start_link(_opts),
+  def start_link(),
     do: Plug.Cowboy.http(__MODULE__, [])
 
 end

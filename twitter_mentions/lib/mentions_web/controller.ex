@@ -5,15 +5,14 @@ defmodule Mentions.Controller do
   plug(:dispatch)
 
   get "/" do
+    config = %{
+      username: Application.get_env(:mentions, :username),
+      max_mentions: Application.get_env(:mentions, :max_mentions),
+      retry_delay: Application.get_env(:mentions, :retry_delay)
+    }
+
     conn
     |> put_resp_content_type("application/json")
-    |> send_resp(200, Poison.encode!(message()))
-  end
-
-  defp message do
-    %{
-      response_type: "in_channel",
-      text: "Hello from BOT :)"
-    }
+    |> send_resp(200, Poison.encode!(%{config: config}))
   end
 end
