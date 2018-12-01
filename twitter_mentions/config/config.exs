@@ -46,11 +46,11 @@ config :mentions,
   retry_delay: System.get_env("MENTIONS_RETRY_DELAY") || "60000"
 
 config :mentions, Mentions.Repo,
-  database: "mentions",
-  username: "postgres",
-  password: "root",
-  hostname: "localhost",
-  port: "5432"
+  database: System.get_env("PG_DATABASE") || "mentions",
+  username: System.get_env("PG_USERNAE") || "postgres",
+  password: System.get_env("PG_PASSWORD") || "root",
+  hostname: System.get_env("PG_HOSTNAME") || "localhost",
+  port: System.get_env("PG_PORT") || "5432"
 
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
