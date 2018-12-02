@@ -1,21 +1,30 @@
-# TwitterMentions
+# Twitter Mentions
 
-**TODO: Add description**
+Collect and persist all the tweets that mention a specific username.
+The username must be configured at ```config/config.exs``` file.
 
-## Installation
-
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `mentions` to your list of dependencies in `mix.exs`:
-
+## Docs
 ```elixir
-def deps do
-  [
-    {:mentions, "~> 0.1.0"}
-  ]
-end
+mix docs
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at [https://hexdocs.pm/mentions](https://hexdocs.pm/mentions).
+## Running with docker-compose
+```elixir
+docker-compose up --build
+```
 
+## All the environment variables
+- (required) MIX_ENV
+- (required) TWITTER_CONSUMER_KEY
+- (required) TWITTER_CONSUMER_SECRET
+- (required) TWITTER_ACCESS_TOKEN
+- (required) TWITTER_ACCESS_TOKEN_SECRET
+- (required) PG_DATABASE
+- (required) PG_USERNAME
+- (required) PG_PASSWORD
+- (required) PG_HOSTNAME
+- (optional) PG_PORT, default "5432"
+- (required) MENTIONS_USERNAME
+- (optional) PG_POOL_SIZE, default "10"
+- (optional) MENTIONS_MAX_MENTIONS, default "100"
+- (optional) MENTIONS_RETRY_DELAY, default "60000"
