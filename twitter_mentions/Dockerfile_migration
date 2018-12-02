@@ -1,0 +1,8 @@
+FROM bitwalker/alpine-elixir:1.7.3
+
+COPY . .
+
+RUN mix archive.install --force 
+
+ENTRYPOINT ["mix"]
+CMD ["ecto.setup"]
