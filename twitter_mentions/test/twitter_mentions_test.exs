@@ -1,8 +1,7 @@
-defmodule TwitterMentionsTest do
+defmodule Mentions.ManagerTest do
   use ExUnit.Case
-  doctest TwitterMentions
 
-  test "greets the world" do
-    assert TwitterMentions.hello() == :world
+  test "dummy" do
+    assert 1 == 1
   end
 end
