@@ -4,7 +4,7 @@ defmodule TwitterMentions.MixProject do
   def project do
     [
       app: :mentions,
-      version: "0.1.0",
+      version: "1.0.0",
       elixir: "~> 1.7",
       start_permanent: Mix.env() == :prod,
       deps: deps(),
@@ -15,7 +15,7 @@ defmodule TwitterMentions.MixProject do
   # Run "mix help compile.app" to learn about applications.
   def application do
     [
-      extra_applications: [:logger, :extwitter],
+      extra_applications: [:logger, :extwitter, :runtime_tools],
       mod: {Mentions.Application, []}
     ]
   end
@@ -28,10 +28,8 @@ defmodule TwitterMentions.MixProject do
       {:ecto_sql, "~> 3.0"},
       {:postgrex, ">= 0.0.0"},
       {:poison, "~> 3.0"},
-      {:plug, "~> 1.6"},
-      {:plug_cowboy, "~> 2.0"},
-      {:cowboy, "~> 2.4"},
-      {:distillery, "~> 2.0"}
+      {:distillery, "~> 2.0", runtime: false},
+      {:ex_doc, "~> 0.19", only: :dev, runtime: false}
     ]
   end
 
