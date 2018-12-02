@@ -36,23 +36,22 @@ config :extwitter, :oauth, [
   access_token_secret: System.get_env("TWITTER_ACCESS_TOKEN_SECRET")
 ]
 
-config :mentions, Mentions.Endpoint, port: 8080
-
 config :mentions, ecto_repos: [Mentions.Repo]
 
 config :mentions,
-  username: System.get_env("MENTIONS_USERNAME") || "leosilvadev",
-  max_mentions: System.get_env("MENTIONS_MAX_MENTIONS") || "100", # the limit in twitter api is 100, so a bigger number won't make a difference
-  retry_delay: System.get_env("MENTIONS_RETRY_DELAY") || "60000"
+  username: System.get_env("MENTIONS_USERNAME"),
+  max_mentions: String.to_integer(System.get_env("MENTIONS_MAX_MENTIONS") || "100"), # the limit in twitter api is 100, so a bigger number won't make a difference
+  retry_delay: String.to_integer(System.get_env("MENTIONS_RETRY_DELAY") || "60000")
 
 config :mentions, Mentions.Repo,
-  database: System.get_env("PG_DATABASE") || "mentions",
-  username: System.get_env("PG_USERNAE") || "postgres",
-  password: System.get_env("PG_PASSWORD") || "root",
-  hostname: System.get_env("PG_HOSTNAME") || "localhost",
-  port: System.get_env("PG_PORT") || "5432"
+  database: System.get_env("PG_DATABASE"),
+  username: System.get_env("PG_USERNAME"),
+  password: System.get_env("PG_PASSWORD"),
+  hostname: System.get_env("PG_HOSTNAME"),
+  port: System.get_env("PG_PORT") || "5432",
+  pool_size: String.to_integer(System.get_env("PG_POOL_SIZE") || "20")
 
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id],
-  level: System.get_env("APP_LOG_LEVEL") || :info
+  level: :info
