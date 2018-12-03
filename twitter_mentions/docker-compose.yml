@@ -21,9 +21,10 @@ services:
     build:
       context: .
       dockerfile: Dockerfile_worker
+      args:
+        MIX_ENV: prod
     restart: on-failure
     environment:
-     - MIX_ENV=prod
      - TWITTER_CONSUMER_KEY=
      - TWITTER_CONSUMER_SECRET=
      - TWITTER_ACCESS_TOKEN=
@@ -38,3 +39,4 @@ services:
     depends_on:
      - postgres
      - migration
+  
