@@ -141,14 +141,15 @@ defmodule Mentions.Manager do
     next_mentions(fn () -> ExTwitter.search_next_page(metadata) end)
 
   defp next_mentions(search) do
-    %{statuses: statuses, metadata: metadata} = search.()
-    %{query: search_for} = metadata
+    with %{statuses: statuses, metadata: metadata} <- search.(),
+         %{query: encoded_search_for} <- metadata,
+         "@" <> _ = search_for <- URI.decode(encoded_search_for),
+         mentions <- Mentions.Mention.parse(search_for, statuses) do
 
-    mentions = statuses
-    |> Stream.map(&(Mentions.Mention.new(URI.decode(search_for), &1)))
-    |> Enum.to_list
+      {mentions, metadata}
 
-    {mentions, metadata}
+      else details -> {:error, "Not possible to get the next mentions. [#{details}]"}
+    end
   end
 
 end

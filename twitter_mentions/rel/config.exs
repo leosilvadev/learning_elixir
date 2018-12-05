@@ -48,4 +48,7 @@ release :mentions do
     {:copy, "config/prod.exs", "etc/prod.exs"},
     {:copy, "config/prod.exs", "etc/test.exs"},
   ]
+  set commands: [
+    migrate: "rel/commands/migrate.sh",
+  ]
 end
