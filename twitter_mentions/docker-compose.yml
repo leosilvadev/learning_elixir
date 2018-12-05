@@ -4,12 +4,15 @@ services:
     image: "postgres:alpine"
     environment:
      - POSTGRES_PASSWORD=root
+     - POSTGRES_DB=mentions
     ports:
      - "5432:5432"
   migration:
     build:
       context: .
       dockerfile: Dockerfile_migration
+      args:
+        MIX_ENV: prod
     environment:
      - PG_DATABASE=mentions
      - PG_USERNAME=postgres
