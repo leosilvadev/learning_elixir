@@ -13,11 +13,8 @@ services:
       dockerfile: Dockerfile_migration
       args:
         MIX_ENV: prod
-    environment:
-     - PG_DATABASE=mentions
-     - PG_USERNAME=postgres
-     - PG_PASSWORD=root
-     - PG_HOSTNAME=postgres
+    env_file:
+     - docker_config/migration.env
     depends_on:
      - postgres
   mentions:
@@ -27,18 +24,8 @@ services:
       args:
         MIX_ENV: prod
     restart: on-failure
-    environment:
-     - TWITTER_CONSUMER_KEY=
-     - TWITTER_CONSUMER_SECRET=
-     - TWITTER_ACCESS_TOKEN=
-     - TWITTER_ACCESS_TOKEN_SECRET=
-     - PG_DATABASE=mentions
-     - PG_USERNAME=postgres
-     - PG_PASSWORD=root
-     - PG_HOSTNAME=postgres
-     - PG_POOL_SIZE=10
-     - MENTIONS_USERNAME=korn
-     - MENTIONS_MAX_MENTIONS=100
+    env_file:
+     - docker_config/worker.env
     depends_on:
      - postgres
      - migration
