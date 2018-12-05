@@ -1,8 +1,24 @@
-FROM bitwalker/alpine-elixir:1.7.3
+FROM bitwalker/alpine-elixir:1.7.3 as build
+
+ARG MIX_ENV
+ENV MIX_ENV=${MIX_ENV}
 
 COPY . .
 
-RUN mix archive.install --force 
+RUN rm -Rf _build && \
+    mix deps.get && \
+    mix release
 
-ENTRYPOINT ["mix"]
-CMD ["ecto.setup"]
+RUN APP_NAME="mentions" && \
+    RELEASE_DIR=`ls -d _build/prod/rel/$APP_NAME/releases/*/` && \
+    mkdir /export && \
+    tar -xf "$RELEASE_DIR/$APP_NAME.tar.gz" -C /export
+
+FROM pentacent/alpine-erlang-base:latest
+
+COPY --from=build /export/ .
+
+USER default
+
+ENTRYPOINT ["/opt/app/bin/mentions"]
+CMD ["migrate"]
