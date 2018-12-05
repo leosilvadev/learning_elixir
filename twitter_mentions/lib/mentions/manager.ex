@@ -1,15 +1,12 @@
 defmodule Mentions.Manager do
   require Logger
 
-  import String, only: [to_integer: 1]
   import Ecto.Query
 
   @moduledoc """
     Contains functions used to handle one or more `Mentions.Mention`.
     A Mention is a tweet that mentions a specific username.
   """
-
-  @months %{"Jan" => 1, "Feb" => 2, "Mar" => 3, "Apr" => 4, "May" => 5, "Jun" => 6, "Jul" => 7, "Ago" => 8, "Sep" => 9, "Oct" => 10, "Nov" => 11, "Dec" => 12}
 
   @doc """
     Search for mentions to a given `mentioned` username or a given `metadata` (result from a previous search).
@@ -144,32 +141,15 @@ defmodule Mentions.Manager do
     next_mentions(fn () -> ExTwitter.search_next_page(metadata) end)
 
   defp next_mentions(search) do
-    %{statuses: statuses, metadata: metadata} = search.()
-    %{query: search_for} = metadata
+    with %{statuses: statuses, metadata: metadata} <- search.(),
+         %{query: encoded_search_for} <- metadata,
+         "@" <> _ = search_for <- URI.decode(encoded_search_for),
+         mentions <- Mentions.Mention.parse(search_for, statuses) do
 
-    mentions = statuses
-    |> Stream.map(&(to_mention(URI.decode(search_for), &1)))
-    |> Enum.to_list
+      {mentions, metadata}
 
-    {mentions, metadata}
-  end
-
-  defp to_mention(search_for, %{id_str: id, text: text, created_at: created_at, retweet_count: retweet_count, user: %{screen_name: screen_name}}), do:
-    %Mentions.Mention{tweet_id: id, search_for: search_for, user: screen_name, text: text, created_at: to_datetime(created_at), retweets: retweet_count}
-
-  defp to_datetime(str) do
-    [_, month_str, day, time, _, year] = String.split(str)
-    [hour, minute, second] = String.split(time, ":")
-
-    {:ok, datetime} = NaiveDateTime.new(
-      to_integer(year),
-      @months |> Map.get(month_str),
-      to_integer(day),
-      to_integer(hour),
-      to_integer(minute),
-      to_integer(second)
-    )
-    datetime
+      else details -> {:error, "Not possible to get the next mentions. [#{details}]"}
+    end
   end
 
 end
